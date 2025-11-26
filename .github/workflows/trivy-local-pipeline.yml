@@ -2,7 +2,7 @@ name: Local Trivy SCA + SBOM Pipeline
 
 on:
   push:
-    branches: [ main ]
+    branches: [ master ]
   workflow_dispatch:
 
 jobs:
