@@ -1,0 +1,26 @@
+name: Local Trivy SCA + SBOM Pipeline
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  run_scans_and_view:
+    runs-on: [self-hosted]  # must match the label of your runner
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Run Trivy SCA + SBOM container
+        run: docker run --rm -v "${{ github.workspace }}:/workspace" trivy-juice-runner
+
+      - name: Run viewer container to display JSON files
+        run: docker run --rm -v "${{ github.workspace }}:/workspace" trivy-viewer-runner
+
+      - name: List generated files
+        run: |
+          ls -lh "${{ github.workspace }}"
+          echo "SCA JSON path:  ${{ github.workspace }}/trivy-sca.json"
+          echo "SBOM path:      ${{ github.workspace }}/sbom.cdx.json"
